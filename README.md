@@ -1,3 +1,3 @@
 # Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image
  Occlusion-aware Amodal Depth Estimation for  Enhancing 3D Reconstruction from a Single Image
-![Uploading PowerPoint-12024-01-1420-30-07-ezgif.com-crop.gif…]()
+![amodal-](https://github.com/Seonguke/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/assets/57488386/850037b1-3543-4a5a-953e-41c418ba3a18)
