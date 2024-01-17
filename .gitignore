@@ -1,0 +1,7 @@
+.idea
+preparation
+
+data/*
+output/*
+*.pth
+*.pth.tar

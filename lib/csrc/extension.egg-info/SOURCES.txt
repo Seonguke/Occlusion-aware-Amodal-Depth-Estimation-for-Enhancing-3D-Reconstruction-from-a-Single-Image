@@ -1,0 +1,16 @@
+setup.py
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/vision.cpp
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cpu/ROIAlign_cpu.cpp
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cpu/nms_cpu.cpp
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/ROIAlign_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/ROIPool_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/SigmoidFocalLoss_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/deform_conv_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/deform_conv_kernel_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/deform_pool_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/deform_pool_kernel_cuda.cu
+/media/iccv/nvme0n1p2/Occlusion-aware-Amodal-Depth-Estimation-for-Enhancing-3D-Reconstruction-from-a-Single-Image/lib/csrc/cuda/nms.cu
+extension.egg-info/PKG-INFO
+extension.egg-info/SOURCES.txt
+extension.egg-info/dependency_links.txt
+extension.egg-info/top_level.txt

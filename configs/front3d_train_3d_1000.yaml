@@ -1,0 +1,80 @@
+MODEL: # Masking
+    FIX2D: True
+    PRETRAIN2D: "/home/sonic/PycharmProjects/py3-mink/panoptic-reconstruction_2/data/panoptic_front3d_v2.pth"
+
+    FIXNORM: True
+
+    DEPTH2D:
+        USE: True
+        FIX: True
+
+    INSTANCE2D:
+        USE: True
+        FIX: True
+
+    PROJECTION:
+        USE: True
+        SIGN_CHANNEL: True
+
+    FRUSTUM3D:
+        USE: True
+        FIX: False
+        TRUNCATION: 3.0
+        ISO_VALUE: 1.0
+
+        SEMANTIC_WEIGHT: 5.0
+        INSTANCE_WEIGHT: 25.0
+        COMPLETION_WEIGHT: 50.0
+        COMPLETION_128_WEIGHT: 25.0
+        COMPLETION_256_WEIGHT: 10.0
+        L1_WEIGHT: 5.0
+#
+        LEVEL_ITERATIONS_64: 3000
+        LEVEL_ITERATIONS_128: 3000
+        LEVEL_ITERATIONS_256: 3000
+#        LEVEL_ITERATIONS_64: 1
+#        LEVEL_ITERATIONS_128: 1
+#        LEVEL_ITERATIONS_256: 1
+
+        COMPLETION_VOXEL_WEIGHTING: True
+        COMPLETION_128_VOXEL_WEIGHTING: True
+        COMPLETION_256_VOXEL_WEIGHTING: True
+        SURFACE_VOXEL_WEIGHTING: True
+
+        SEMANTIC_VOXEL_WEIGHTING: False
+        INSTANCE_VOXEL_WEIGHTING: False
+
+DATASETS:
+    TRAIN: "Amodal_Train"
+    VAL: "Amodal_Validation"
+    TRAINVAL: "Front3D_Train"
+    TEST: "Front3D_Test"
+#    TRAIN: "Front3D_Train"
+#    VAL: "Front3D_Validation"
+#    TRAINVAL: "Front3D_Train"
+#    TEST: "Front3D_Test"
+    NUM_TRAIN: 0
+    NUM_TEST: 100
+    NUM_VALIDATE: 50
+    OVERFITTING: False
+    FIELDS: ("color", "depth", "instance2d", "geometry")
+
+DATALOADER:
+    IMS_PER_BATCH: 1
+    MAX_ITER: 100000
+    SHUFFLE: True
+    NUM_WORKERS: 4
+
+#    IMS_PER_BATCH: 1
+#    MAX_ITER: 100000
+#    SHUFFLE: False
+#    NUM_WORKERS: 4
+SOLVER:
+    BASE_LR: 0.0001
+    BETA_1: 0.9
+    BETA_2: 0.999
+    STEPS: (25000, 35000)
+    CHECKPOINT_PERIOD: 500
+    WEIGHT_DECAY: 0.000000
+    EVALUATION_PERIOD: 50000
+
