@@ -10,7 +10,7 @@ from lib.config import config
 
 def main() -> None:
     # arguments
-    parser = argparse.ArgumentParser(description="Panoptic 3D Scene Reconstruction from a Single RGB Image")
+    parser = argparse.ArgumentParser(description="Amodal depth 3D Scene Reconstruction from a Single RGB Image")
     parser.add_argument("--gpu", type=str, default="0")
     parser.add_argument("--Masking", type=bool, default=True)
     parser.add_argument("--config-file", "-c", type=str, default="configs/amodal_front3d_train_3d.yaml")

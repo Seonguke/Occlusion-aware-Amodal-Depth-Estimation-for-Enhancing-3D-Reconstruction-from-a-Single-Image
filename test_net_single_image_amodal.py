@@ -8,13 +8,18 @@ from typing import Dict, Any
 import copy
 import cv2
 import matplotlib.pyplot as plt
-import pyexr
+from tqdm import tqdm
 
+import pandas as pd
+import pyexr
 from lib import modeling
 from lib.config import config
 from lib.utils.intrinsics import adjust_intrinsic
 import lib.visualize as vis
-from lib.visualize.image import write_detection_image, write_depth
+from lib.visualize.image import  write_depth
+from lib.data import setup_dataloader
+
+from lib.structures.field_list import collect
 from lib.structures.frustum import compute_camera2frustum_transform
 from lib.modeling.amodal_model.dpt import Resize, NormalizeImage, PrepareForNet
 
@@ -75,11 +80,6 @@ def mask_input(dataset_root_path,scene_id,img_id):
     hint2 = torch.from_numpy(
         hint2.astype(np.float32)).unsqueeze(0).unsqueeze(0)
     return init_mask, hint, hint2
-
-
-
-
-
 def disave(disp, name, cat):
     for x in range(disp.shape[0]):
         plt.imshow(disp[x, 0, :, :])
@@ -89,8 +89,6 @@ def disave(disp, name, cat):
         plt.savefig(fname=name + '/' + cat + '.jpg', bbox_inches='tight',
                     pad_inches=0)
         plt.close()
-
-
 def visualize_2d(results: Dict[str, Any], output_path: os.PathLike) -> None:
 
     output_path = str(output_path)
@@ -141,7 +139,6 @@ def visualize_2d(results: Dict[str, Any], output_path: os.PathLike) -> None:
         for x in range(mt.shape[0]):
             cv2.imwrite("{}/{}.png".format(output_path, mac[j]),
                         np.array(mt[x, ...])[:, :, ::-1])
-
 def load_pretrained3d(opts,device):
     print("Load model...")
 
@@ -187,6 +184,38 @@ def prepare_input_img(color):
     color = transform_rgb({"image": color})["image"]
     input_image = torch.from_numpy(color.astype(np.float32))
     return input_image
+
+
+def gt_depth_input(opts):
+    dataset_root_path = 'data/Amodal_front3d/filtering_rgb/'
+
+    scene_id = opts.line[0]
+    prev_id = opts.line[1]
+    mask_id = str(int(prev_id) - 1).zfill(4)
+    mask_id2 = str(int(prev_id) - 2).zfill(4)
+
+    init_depth = pyexr.read(dataset_root_path + '/' + scene_id + '/' + f"depth_{prev_id}.exr").squeeze().copy()
+    depth = pyexr.read(dataset_root_path + '/' + scene_id + '/' + f"depth_{mask_id}.exr").squeeze().copy()
+    depth2 = pyexr.read(dataset_root_path + '/' + scene_id + '/' + f"depth_{mask_id2}.exr").squeeze().copy()
+
+    #depth = pyexr.read(str(dataset_root_path / scene_id / f"depth_{prev_id}.exr")).squeeze().copy()
+
+    if init_depth.shape > 2:
+        init_depth = init_depth[:, :, 0]
+        depth = depth[:, :, 0]
+        depth2 = depth2[:, :, 0]
+
+    init_depth = torch.from_numpy(
+        init_depth.astype(np.float32)).unsqueeze(0)
+    init_depth = F.interpolate(init_depth.unsqueeze(dim=0), size=(120, 160)).squeeze(dim=0)
+    depth = torch.from_numpy(
+        depth.astype(np.float32)).unsqueeze(0)
+    depth = F.interpolate(depth.unsqueeze(dim=0), size=(120, 160)).squeeze(dim=0)
+    depth2 = torch.from_numpy(
+        depth2.astype(np.float32)).unsqueeze(0)
+    depth2 = F.interpolate(depth2.unsqueeze(dim=0), size=(120, 160)).squeeze(dim=0)
+
+    return init_depth,depth,depth2
 def main(opts):
     configure_inference(opts)
     device = torch.device("cuda:0")
@@ -213,6 +242,7 @@ def main(opts):
         front3d_intrinsic = adjust_intrinsic(front3d_intrinsic, color_image_size, depth_image_size)
         front3d_intrinsic = torch.from_numpy(front3d_intrinsic).to(device).float()
 
+
         # Prepare frustum mask.
         front3d_frustum_mask = np.load(str(data_root+"frustum_mask.npz"))["mask"]
         front3d_frustum_mask = torch.from_numpy(front3d_frustum_mask).bool().to(device).unsqueeze(0).unsqueeze(0)
@@ -224,6 +254,7 @@ def main(opts):
         print(f"Visualize results, save them at {config.OUTPUT_DIR+scene_id+'/'+image_id}")
         visualize_results(results, config.OUTPUT_DIR+scene_id+'/'+image_id)
         visualize_2d(results, config.OUTPUT_DIR+scene_id+'/'+image_id)
+
 
 
 
@@ -292,8 +323,8 @@ if __name__ == '__main__':
 
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_list", "-i", type=str, default=str("resources/Amodal_front3d/demo.txt"))
-    parser.add_argument("--output_path", "-o", type=str, default="output/amodal")
+    parser.add_argument("--input_list", "-i", type=str, default=str("resources/Amodal_front3d/valid.txt"))
+    parser.add_argument("--output_path", "-o", type=str, default="output/amodal/")
     parser.add_argument("--config-file", "-c", type=str, default="configs/amodal_front3d_evaluate.yaml")
     parser.add_argument("--model", "-m", type=str, default="weights/SG3N_Amodal.pth")
     parser.add_argument("opts", default=None, nargs=argparse.REMAINDER)

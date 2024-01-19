@@ -124,7 +124,36 @@ def prepare_input_img(color):
     input_image = torch.from_numpy(color.astype(np.float32))
     return input_image
 
+def gt_depth_input(opts):
+    dataset_root_path = 'data/Amodal_front3d/filtering_rgb/'
 
+    scene_id = opts.line[0]
+    prev_id = opts.line[1]
+    mask_id = str(int(prev_id) - 1).zfill(4)
+    mask_id2 = str(int(prev_id) - 2).zfill(4)
+
+    init_depth = pyexr.read(dataset_root_path + '/' + scene_id + '/' + f"depth_{prev_id}.exr").squeeze().copy()
+    depth = pyexr.read(dataset_root_path + '/' + scene_id + '/' + f"depth_{mask_id}.exr").squeeze().copy()
+    depth2 = pyexr.read(dataset_root_path + '/' + scene_id + '/' + f"depth_{mask_id2}.exr").squeeze().copy()
+
+    #depth = pyexr.read(str(dataset_root_path / scene_id / f"depth_{prev_id}.exr")).squeeze().copy()
+
+    if init_depth.shape > 2:
+        init_depth = init_depth[:, :, 0]
+        depth = depth[:, :, 0]
+        depth2 = depth2[:, :, 0]
+
+    init_depth = torch.from_numpy(
+        init_depth.astype(np.float32)).unsqueeze(0)
+    init_depth = F.interpolate(init_depth.unsqueeze(dim=0), size=(120, 160)).squeeze(dim=0)
+    depth = torch.from_numpy(
+        depth.astype(np.float32)).unsqueeze(0)
+    depth = F.interpolate(depth.unsqueeze(dim=0), size=(120, 160)).squeeze(dim=0)
+    depth2 = torch.from_numpy(
+        depth2.astype(np.float32)).unsqueeze(0)
+    depth2 = F.interpolate(depth2.unsqueeze(dim=0), size=(120, 160)).squeeze(dim=0)
+
+    return init_depth,depth,depth2
 def main(opts):
     configure_inference(opts)
     device = torch.device("cuda:0")
@@ -220,7 +249,7 @@ def visualize_results(results: Dict[str, Any], output_path: os.PathLike) -> None
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_list", "-i", type=str, default=str("resources/Amodal_front3d/demo.txt"))
+    parser.add_argument("--input_list", "-i", type=str, default=str("resources/Amodal_front3d/valid.txt"))
     parser.add_argument("--output_path", "-o", type=str, default="output/base/")
     parser.add_argument("--config-file", "-c", type=str, default="configs/amodal_front3d_evaluate.yaml")
     parser.add_argument("--model", "-m", type=str, default="weights/SG3N_base.pth")
