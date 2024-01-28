@@ -42,9 +42,9 @@ pip install SciPy,plyfile,timm, wandb, pandas
 The [3D-FRONT](https://tianchi.aliyun.com/specials/promotion/alibaba-3d-scene-dataset) indoor datasets consists of 6,813 furnished apartments.  
 We used Blenderproc, like SG3N[1], to simulate occlusion images from individual rooms.  
 ### Prepare dataset
-1.Downlowd zip files [weights](http://gofile.me/5RW4J/TV7ziBCU7) and [data](http://gofile.me/5RW4J/gReLLmbxA) 
-2.Unzip files
-3.Move directories "weights and data" to this project
+1.Downlowd zip files [weights](http://gofile.me/5RW4J/TV7ziBCU7) and [data](http://gofile.me/5RW4J/gReLLmbxA)  
+2.Unzip files  
+3.Move directories "weights and data" to this project  
 4.[GT Mesh](http://gofile.me/5RW4J/P1whvFpXX) for 3D Evaluation 
 
 
